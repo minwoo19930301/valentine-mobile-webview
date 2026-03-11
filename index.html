@@ -1,0 +1,1137 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>채은이의 마음 얻기 대작전</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+    :root {
+      --bg1: #ffe5ec;
+      --bg2: #ffd6a5;
+      --card: rgba(255, 255, 255, 0.9);
+      --text: #7f1237;
+      --accent: #ff3f7a;
+      --accent-dark: #c8285a;
+      --muted: #96506b;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      color: var(--text);
+      background: linear-gradient(155deg, var(--bg1), var(--bg2));
+      overflow: hidden;
+    }
+
+    .app {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: calc(env(safe-area-inset-top, 0px) + 16px) 14px calc(env(safe-area-inset-bottom, 0px) + 16px);
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: calc(env(safe-area-inset-top, 0px) + 16px) 14px calc(env(safe-area-inset-bottom, 0px) + 16px);
+      z-index: 2;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .card {
+      width: min(94vw, 470px);
+      background: var(--card);
+      border-radius: 24px;
+      padding: 22px 16px;
+      text-align: center;
+      box-shadow: 0 18px 44px rgba(95, 10, 39, 0.2);
+      backdrop-filter: blur(4px);
+      animation: pop 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .kr-title {
+      margin: 0;
+      font-size: clamp(1.9rem, 9vw, 2.6rem);
+      line-height: 1.18;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      word-break: keep-all;
+      color: #9a1145;
+      text-shadow: 0 3px 12px rgba(154, 17, 69, 0.14);
+    }
+
+    .final-title {
+      margin: 0 0 14px;
+      font-size: clamp(2.1rem, 11vw, 3rem);
+      color: #a70f42;
+      text-shadow: 0 2px 0 rgba(255, 255, 255, 0.46);
+      font-weight: 900;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 18px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      background: var(--accent);
+      box-shadow: 0 10px 20px rgba(255, 63, 122, 0.32);
+      transition: transform 0.15s ease, background 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+      background: var(--accent-dark);
+    }
+
+    .muted-btn {
+      background: var(--muted);
+      box-shadow: 0 8px 16px rgba(57, 15, 31, 0.22);
+    }
+
+    .restart-btn {
+      min-width: 160px;
+    }
+
+    .mode-picker {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .num-btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 0;
+      width: 54px;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      color: #7f1237;
+      background: rgba(255, 63, 122, 0.14);
+      box-shadow: 0 8px 16px rgba(57, 15, 31, 0.12);
+    }
+
+    .num-btn:active {
+      transform: scale(0.98);
+      background: rgba(255, 63, 122, 0.22);
+    }
+
+    .final-footer {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+    }
+
+    .final-footer .mode-picker {
+      margin-top: 0;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(154, 17, 69, 0.14);
+      padding: 10px 10px;
+      border-radius: 18px;
+      box-shadow: 0 12px 24px rgba(57, 15, 31, 0.12);
+      backdrop-filter: blur(4px);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 8;
+      background: rgba(30, 8, 16, 0.56);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    .modal.hidden {
+      display: none;
+    }
+
+    .modal-card {
+      width: min(96vw, 520px);
+      border-radius: 18px;
+      background: #fff;
+      color: #4e2233;
+      overflow: hidden;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+    }
+
+    .ask-body {
+      padding: 18px 14px 16px;
+      text-align: center;
+    }
+
+    .ask-title {
+      margin: 0 0 14px;
+      font-family: "Dancing Script", "Apple Chancery", "Snell Roundhand", cursive;
+      font-size: clamp(2.05rem, 10vw, 3.05rem);
+      line-height: 1.15;
+      color: #9a1145;
+      text-shadow: 0 3px 12px rgba(154, 17, 69, 0.16);
+    }
+
+    .ask-row {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+      justify-content: center;
+      position: relative;
+    }
+
+    .ask-row.swapped {
+      flex-direction: row-reverse;
+    }
+
+    .ask-row .btn {
+      flex: 1;
+      min-width: 0;
+      min-height: 92px;
+      font-size: 1.35rem;
+      line-height: 1;
+      transform-origin: center;
+    }
+
+    .ask-mode4 {
+      margin-top: 10px;
+    }
+
+    .ask-follow {
+      margin: 6px 0 12px;
+      font-size: clamp(1.65rem, 8vw, 2.25rem);
+      font-weight: 900;
+      color: #9a1145;
+    }
+
+    .ask-mode4 .btn {
+      width: 100%;
+      min-height: 92px;
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .ask-mode5,
+    .ask-mode6,
+    .ask-mode8 {
+      margin-top: 10px;
+    }
+
+    .ask-small {
+      margin: 6px 0 10px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: #9a2450;
+      word-break: keep-all;
+    }
+
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 10px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.62);
+      border: 1px solid rgba(154, 17, 69, 0.18);
+    }
+
+    .slider-label {
+      flex: 0 0 auto;
+      width: 46px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 900;
+      color: #9a1145;
+      opacity: 0.92;
+    }
+
+    #noSlider {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .input-wrap {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    .text-input {
+      flex: 1;
+      min-width: 0;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(154, 17, 69, 0.22);
+      background: rgba(255, 255, 255, 0.8);
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #7f1237;
+      outline: none;
+    }
+
+    .text-input:focus {
+      border-color: rgba(255, 63, 122, 0.6);
+      box-shadow: 0 0 0 3px rgba(255, 63, 122, 0.14);
+    }
+
+    .scan-frame {
+      width: 160px;
+      height: 160px;
+      margin: 10px auto 0;
+      border-radius: 22px;
+      background: rgba(255, 63, 122, 0.08);
+      border: 2px solid rgba(154, 17, 69, 0.22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: linear-gradient(90deg, rgba(255, 63, 122, 0), rgba(255, 63, 122, 0.85), rgba(255, 63, 122, 0));
+      animation: scanMove 0.9s ease-in-out infinite;
+      opacity: 0;
+    }
+
+    @keyframes scanMove {
+      0% {
+        top: -14px;
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      55% {
+        top: 70%;
+        opacity: 1;
+      }
+      100% {
+        top: 112%;
+        opacity: 0;
+      }
+    }
+
+    .ask-msg {
+      margin: 12px 0 0;
+      min-height: 26px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #b01046;
+      word-break: keep-all;
+    }
+
+    .ask-msg.hidden {
+      display: none;
+    }
+
+    .flash {
+      animation: flash 0.25s ease;
+    }
+
+    @keyframes flash {
+      0% {
+        transform: scale(1);
+        filter: brightness(1);
+      }
+      50% {
+        transform: scale(1.06);
+        filter: brightness(1.12);
+      }
+      100% {
+        transform: scale(1);
+        filter: brightness(1);
+      }
+    }
+
+    .terms-head {
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid #f0dfe6;
+      text-align: left;
+    }
+
+    .terms-head h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #7a1236;
+    }
+
+    .terms-box {
+      padding: 12px 14px;
+      max-height: 66vh;
+      overflow: auto;
+      text-align: left;
+      line-height: 1.45;
+      font-size: 0.88rem;
+      background: #fffafc;
+      border-bottom: 1px solid #f0dfe6;
+    }
+
+    .terms-title {
+      margin: 0 0 8px;
+      font-size: 0.92rem;
+      font-weight: 900;
+      color: #7a1236;
+    }
+
+    .terms-box p {
+      margin: 0 0 8px;
+    }
+
+    .terms-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 6px 0 10px;
+      font-size: 0.84rem;
+    }
+
+    .terms-table th,
+    .terms-table td {
+      border: 1px solid #efccda;
+      padding: 6px;
+      vertical-align: top;
+    }
+
+    .terms-table th {
+      background: #fff0f6;
+      font-weight: 900;
+    }
+
+    .special {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(138, 43, 74, 0.2);
+      background: rgba(255, 255, 255, 0.85);
+      font-weight: 900;
+      color: #8a2b4a;
+      transition: all 0.2s ease;
+    }
+
+    .special.highlight {
+      background: #ffe89a;
+      border-color: #f7b500;
+      box-shadow: 0 0 0 3px rgba(247, 181, 0, 0.18);
+      color: #7f1212;
+    }
+
+    .terms-foot {
+      padding: 12px 14px 14px;
+      text-align: left;
+    }
+
+    .terms-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .terms-actions .btn {
+      flex: 1;
+    }
+
+    .hearts {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -48px;
+      animation: floatUp linear forwards;
+      opacity: 0;
+      filter: drop-shadow(0 6px 10px rgba(176, 16, 70, 0.22));
+    }
+
+    @keyframes pop {
+      from {
+        transform: scale(0.95);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      15% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-110vh) translateX(var(--drift)) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="hearts" id="hearts"></div>
+
+    <section class="screen active" id="titleScreen">
+      <div class="card">
+        <h1 class="kr-title">채은이의 마음 얻기<br />대작전!</h1>
+      </div>
+    </section>
+
+    <section class="screen" id="finalScreen">
+      <div class="card">
+        <h2 class="final-title">Congratulations!!</h2>
+        <button class="btn restart-btn" id="restartBtn">다시보기</button>
+      </div>
+      <footer class="final-footer" aria-label="Mode footer">
+        <div class="mode-picker" id="modePicker" aria-label="Mode picker">
+          <button class="num-btn" data-idx="0">1</button>
+          <button class="num-btn" data-idx="1">2</button>
+          <button class="num-btn" data-idx="2">3</button>
+          <button class="num-btn" data-idx="3">4</button>
+          <button class="num-btn" data-idx="4">5</button>
+          <button class="num-btn" data-idx="5">6</button>
+          <button class="num-btn" data-idx="6">7</button>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <div class="modal hidden" id="askModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Valentine question">
+      <div class="ask-body">
+        <h2 class="ask-title" id="askTitle">Will you be my valentine?</h2>
+        <div class="ask-row" id="askRow">
+          <button class="btn" id="askYesBtn">YES</button>
+          <button class="btn muted-btn" id="askNoBtn">NO</button>
+        </div>
+
+        <div class="ask-mode4 hidden" id="askMode4">
+          <p class="ask-follow" id="askFollow">No?</p>
+          <button class="btn muted-btn" id="askNoBangBtn">NO!</button>
+        </div>
+
+        <div class="ask-mode5 hidden" id="askMode5">
+          <p class="ask-small">NO 선택하려면 슬라이더를 끝까지 밀어주세요</p>
+          <div class="slider-wrap">
+            <span class="slider-label">YES</span>
+            <input type="range" id="noSlider" min="0" max="100" value="0" aria-label="NO slider" />
+            <span class="slider-label">NO</span>
+          </div>
+        </div>
+
+        <div class="ask-mode6 hidden" id="askMode6">
+          <p class="ask-small">NO 선택을 위해 Face ID 인증이 필요합니다</p>
+          <div class="scan-frame" aria-hidden="true">
+            <div class="scan-line"></div>
+          </div>
+        </div>
+
+        <div class="ask-mode8 hidden" id="askMode8">
+          <p class="ask-small">NO를 입력해주세요</p>
+          <div class="input-wrap">
+            <input class="text-input" id="noTextInput" inputmode="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="no" />
+            <button class="btn muted-btn" id="noTextBtn">확인</button>
+          </div>
+        </div>
+
+        <p class="ask-msg hidden" id="askMsg"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="consentModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Privacy consent">
+      <div class="terms-head">
+        <h3>개인정보 수집·이용 동의서(필수)</h3>
+      </div>
+      <div class="terms-box" id="termsBox">
+        <p class="terms-title">제1조 (수집 항목 및 이용 목적)</p>
+        <p>본 서비스는 의사결정 편의 제공 및 밸런타인 매칭 시뮬레이션 운영을 위해 다음 개인정보를 수집·이용합니다.</p>
+        <table class="terms-table" aria-label="개인정보 수집 항목">
+          <thead>
+            <tr>
+              <th>수집 항목</th>
+              <th>수집 목적</th>
+              <th>보유 기간</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>닉네임, 연락처, 기기정보, 클릭기록</td>
+              <td>본인 식별, 서비스 제공, 화면 개인화</td>
+              <td>회원탈퇴 또는 동의 철회 시까지</td>
+            </tr>
+            <tr>
+              <td>접속 로그, IP, 쿠키, 이용기록</td>
+              <td>부정 이용 방지, 오류 분석, 품질 개선</td>
+              <td>최대 6개월</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="terms-title">제2조 (동의 거부 권리 및 불이익)</p>
+        <p>정보주체는 개인정보 수집·이용 동의를 거부할 권리가 있습니다. 다만 필수 항목 동의 거부 시 NO 선택 서비스 이용이 제한될 수 있습니다.</p>
+
+        <p class="terms-title">제3조 (제3자 제공 및 처리 위탁)</p>
+        <p>서비스 안정화, 메시지 발송, 통계 분석을 위해 필요한 범위 내에서 처리업무가 위탁될 수 있습니다.</p>
+
+        <p class="terms-title">특별 조항</p>
+        <p class="special" id="specialClause">특별 조항 5-4: 동의 시 본 동의서에 기재된 "No"는 시스템상 "Yes"로 간주됩니다.</p>
+
+        <p class="terms-title">제4조 (정보주체 권리)</p>
+        <p>정보주체는 개인정보 열람, 정정, 삭제, 처리정지 및 동의 철회를 요청할 수 있습니다.</p>
+
+        <p class="terms-title">제5조 (기타)</p>
+        <p>본 동의서는 화면 연출용으로 작성되었으며 실제 법률 문서가 아닙니다.</p>
+      </div>
+      <div class="terms-foot">
+        <div class="terms-actions">
+          <button class="btn muted-btn" id="consentCancelBtn">취소</button>
+          <button class="btn" id="consentAgreeBtn">동의 후 진행</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const titleScreen = document.getElementById('titleScreen');
+    const finalScreen = document.getElementById('finalScreen');
+
+    const askModal = document.getElementById('askModal');
+    const askTitle = document.getElementById('askTitle');
+    const askRow = document.getElementById('askRow');
+    const askYesBtn = document.getElementById('askYesBtn');
+    const askNoBtn = document.getElementById('askNoBtn');
+    const askMsg = document.getElementById('askMsg');
+    const askMode4 = document.getElementById('askMode4');
+    const askFollow = document.getElementById('askFollow');
+    const askNoBangBtn = document.getElementById('askNoBangBtn');
+    const askMode5 = document.getElementById('askMode5');
+    const noSlider = document.getElementById('noSlider');
+    const askMode6 = document.getElementById('askMode6');
+    const askMode8 = document.getElementById('askMode8');
+    const noTextInput = document.getElementById('noTextInput');
+    const noTextBtn = document.getElementById('noTextBtn');
+
+    const consentModal = document.getElementById('consentModal');
+    const specialClause = document.getElementById('specialClause');
+    const termsBox = document.getElementById('termsBox');
+    const consentCancelBtn = document.getElementById('consentCancelBtn');
+    const consentAgreeBtn = document.getElementById('consentAgreeBtn');
+
+    const restartBtn = document.getElementById('restartBtn');
+    const modePicker = document.getElementById('modePicker');
+
+    const heartsLayer = document.getElementById('hearts');
+
+    let heartInterval = null;
+    let mode1Interval = null;
+
+    let showAskTimeout = null;
+    let pickModeTimeout = null;
+
+    const modeOrder = [1, 2, 4, 3, 5, 6, 8];
+    let modeIndex = 0;
+
+    let currentMode = null; // 1..9
+    let mode2Triggered = false;
+    let mode6Triggered = false;
+    let mode5ReturnRaf = null;
+    // Legacy guard: older event handlers referenced this; harmless to keep defined.
+    let mode5Snapped = false;
+    let mode8Triggered = false;
+
+    function showScreen(which) {
+      titleScreen.classList.toggle('active', which === 'title');
+      finalScreen.classList.toggle('active', which === 'final');
+    }
+
+    function openAskModal() {
+      resetAskUI();
+      currentMode = modeOrder[modeIndex % modeOrder.length];
+      askModal.classList.remove('hidden');
+      askModal.setAttribute('aria-hidden', 'false');
+      // Buttons should appear after a short beat.
+      askRow.classList.add('hidden');
+
+      if (pickModeTimeout) {
+        clearTimeout(pickModeTimeout);
+      }
+
+      // After a short beat, the mode effect kicks in.
+      pickModeTimeout = setTimeout(() => {
+        askRow.classList.remove('hidden');
+        applyMode(currentMode);
+      }, 300);
+    }
+
+    function closeAskModal() {
+      if (pickModeTimeout) {
+        clearTimeout(pickModeTimeout);
+        pickModeTimeout = null;
+      }
+      askModal.classList.add('hidden');
+      askModal.setAttribute('aria-hidden', 'true');
+    }
+
+    function openConsentModal() {
+      consentModal.classList.remove('hidden');
+      consentModal.setAttribute('aria-hidden', 'false');
+
+      specialClause.classList.remove('highlight');
+      termsBox.scrollTop = 0;
+    }
+
+    function closeConsentModal() {
+      consentModal.classList.add('hidden');
+      consentModal.setAttribute('aria-hidden', 'true');
+    }
+
+    function resetAskUI() {
+      currentMode = null;
+      mode2Triggered = false;
+      mode6Triggered = false;
+      mode8Triggered = false;
+
+      if (mode1Interval) {
+        clearInterval(mode1Interval);
+        mode1Interval = null;
+      }
+      if (mode5ReturnRaf) {
+        cancelAnimationFrame(mode5ReturnRaf);
+        mode5ReturnRaf = null;
+      }
+
+      askYesBtn.disabled = false;
+      askNoBtn.disabled = false;
+
+      askRow.classList.remove('swapped');
+      askRow.classList.remove('hidden');
+      askMode4.classList.add('hidden');
+      askMode5.classList.add('hidden');
+      askMode6.classList.add('hidden');
+      askMode8.classList.add('hidden');
+      askTitle.classList.remove('hidden');
+
+      askYesBtn.classList.remove('flash');
+      askNoBtn.classList.remove('flash');
+
+      askYesBtn.style.transform = 'scale(1)';
+      askNoBtn.style.transform = 'scale(1)';
+      askNoBtn.style.opacity = '1';
+
+      askFollow.textContent = 'No?';
+      askNoBangBtn.disabled = false;
+      askNoBangBtn.style.opacity = '1';
+      noSlider.value = '0';
+      noTextInput.value = '';
+
+      askMsg.textContent = '';
+      askMsg.classList.add('hidden');
+
+      specialClause.classList.remove('highlight');
+    }
+
+    function applyMode(mode) {
+      if (mode === 1) {
+        startMode1();
+      }
+    }
+
+    function startMode1() {
+      // Mode 1: no interaction, just watch the YES takeover.
+      askYesBtn.disabled = true;
+      askNoBtn.disabled = true;
+
+      let step = 0;
+      const total = 22;
+
+      mode1Interval = setInterval(() => {
+        step += 1;
+        const progress = step / total;
+
+        // YES gets huge, NO becomes tiny (hard to tap) but still visible.
+        askYesBtn.style.transform = `scale(${1 + progress * 4.2})`;
+        askNoBtn.style.transform = `scale(${Math.max(0.035, 1 - progress * 0.97)})`;
+        askNoBtn.style.opacity = `${Math.max(0.16, 1 - progress * 0.9)}`;
+
+        if (step >= total) {
+          clearInterval(mode1Interval);
+          mode1Interval = null;
+          setTimeout(() => {
+            goFinal();
+          }, 220);
+        }
+      }, 90);
+    }
+
+    function spawnHeart() {
+      const heart = document.createElement('span');
+      heart.className = 'heart';
+      heart.textContent = ['❤', '💖', '💗', '💘'][Math.floor(Math.random() * 4)];
+      heart.style.left = `${Math.random() * 100}vw`;
+      heart.style.fontSize = `${18 + Math.random() * 34}px`;
+      heart.style.animationDuration = `${2.3 + Math.random() * 2.1}s`;
+      heart.style.setProperty('--drift', `${(Math.random() - 0.5) * 170}px`);
+      heartsLayer.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 5200);
+    }
+
+    function burstHearts(count = 50) {
+      for (let i = 0; i < count; i += 1) {
+        setTimeout(spawnHeart, i * 50);
+      }
+    }
+
+    function startHearts() {
+      burstHearts(58);
+      if (heartInterval) {
+        clearInterval(heartInterval);
+      }
+      heartInterval = setInterval(() => {
+        burstHearts(8);
+      }, 820);
+    }
+
+    function stopHearts() {
+      if (heartInterval) {
+        clearInterval(heartInterval);
+        heartInterval = null;
+      }
+      heartsLayer.innerHTML = '';
+    }
+
+    function goFinal() {
+      if (mode1Interval) {
+        clearInterval(mode1Interval);
+        mode1Interval = null;
+      }
+
+      closeConsentModal();
+      closeAskModal();
+
+      showScreen('final');
+      startHearts();
+    }
+
+    askYesBtn.addEventListener('click', () => {
+      goFinal();
+    });
+
+    askNoBtn.addEventListener('click', () => {
+      if (currentMode === 1) {
+        // Still ends in YES.
+        goFinal();
+        return;
+      }
+
+      if (currentMode === 2) {
+        if (mode2Triggered) {
+          return;
+        }
+        mode2Triggered = true;
+
+        askRow.classList.add('swapped');
+        askYesBtn.classList.add('flash');
+
+        setTimeout(() => {
+          goFinal();
+        }, 280);
+        return;
+      }
+
+      if (currentMode === 3) {
+        openConsentModal();
+        return;
+      }
+
+      if (currentMode === 4) {
+        askTitle.classList.add('hidden');
+        askRow.classList.add('hidden');
+        askMode4.classList.remove('hidden');
+        askFollow.textContent = 'No?';
+        askMsg.textContent = '';
+        askMsg.classList.add('hidden');
+        return;
+      }
+
+      if (currentMode === 5) {
+        askRow.classList.add('hidden');
+        askMode5.classList.remove('hidden');
+        noSlider.value = '0';
+        askMsg.textContent = '';
+        askMsg.classList.add('hidden');
+        return;
+      }
+
+      if (currentMode === 6) {
+        if (mode6Triggered) {
+          return;
+        }
+        mode6Triggered = true;
+
+        askRow.classList.add('hidden');
+        askMode6.classList.remove('hidden');
+        askMsg.textContent = 'Face ID 확인 중...';
+        askMsg.classList.remove('hidden');
+
+        setTimeout(() => {
+          askMsg.textContent = '인증 실패: YES로 대체 처리';
+        }, 2000);
+
+        setTimeout(() => {
+          goFinal();
+        }, 3400);
+        return;
+      }
+
+      if (currentMode === 8) {
+        askRow.classList.add('hidden');
+        askMode8.classList.remove('hidden');
+        askMsg.textContent = '';
+        askMsg.classList.add('hidden');
+        setTimeout(() => {
+          noTextInput.focus();
+        }, 80);
+        return;
+      }
+
+    });
+
+    askNoBangBtn.addEventListener('click', () => {
+      // Mode 4: "No?" -> "NO!" -> step-by-step double-negation -> Congratulations.
+      askFollow.textContent = 'NO!';
+      askNoBangBtn.disabled = true;
+      askNoBangBtn.style.opacity = '0.6';
+      askMsg.classList.remove('hidden');
+
+      const steps = ['No * no ->', 'No ^ no ->', '이중부정 ->', '!! ->', '계산중...', 'Yes!'];
+      let i = 0;
+      askMsg.textContent = steps[i];
+      const tick = () => {
+        i += 1;
+        if (i >= steps.length) {
+          goFinal();
+          return;
+        }
+        askMsg.textContent = steps[i];
+        setTimeout(tick, 260);
+      };
+      setTimeout(tick, 320);
+    });
+
+    function clampMode5() {
+      const value = Number(noSlider.value);
+      if (value > 80) {
+        noSlider.value = '80';
+      }
+    }
+
+    function returnMode5ToYes() {
+      if (currentMode !== 5) {
+        return;
+      }
+      if (askMode5.classList.contains('hidden')) {
+        return;
+      }
+      if (mode5ReturnRaf) {
+        cancelAnimationFrame(mode5ReturnRaf);
+        mode5ReturnRaf = null;
+      }
+
+      const start = Number(noSlider.value);
+      const durationMs = 200;
+      const t0 = performance.now();
+      const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+
+      const frame = (now) => {
+        const t = Math.min(1, (now - t0) / durationMs);
+        const eased = easeOut(t);
+        const v = Math.round(start * (1 - eased));
+        noSlider.value = String(v);
+        if (t < 1) {
+          mode5ReturnRaf = requestAnimationFrame(frame);
+        } else {
+          mode5ReturnRaf = null;
+          setTimeout(() => {
+            goFinal();
+          }, 120);
+        }
+      };
+
+      mode5ReturnRaf = requestAnimationFrame(frame);
+    }
+
+    noSlider.addEventListener('input', () => {
+      if (currentMode !== 5) {
+        return;
+      }
+      if (mode5ReturnRaf) {
+        cancelAnimationFrame(mode5ReturnRaf);
+        mode5ReturnRaf = null;
+      }
+      clampMode5();
+    });
+
+    // When released, it quickly returns to YES.
+    noSlider.addEventListener('pointerup', returnMode5ToYes);
+    noSlider.addEventListener('touchend', returnMode5ToYes, { passive: true });
+    noSlider.addEventListener('mouseup', returnMode5ToYes);
+    noSlider.addEventListener('change', returnMode5ToYes);
+
+    noTextBtn.addEventListener('click', () => {
+      if (currentMode !== 8) {
+        return;
+      }
+      if (mode8Triggered) {
+        return;
+      }
+      mode8Triggered = true;
+
+      askMsg.textContent = '자동완성이 적용되었습니다';
+      askMsg.classList.remove('hidden');
+
+      // Wait ~2s so the user sees the message, then flip to YES.
+      setTimeout(() => {
+        noTextInput.value = 'YES';
+        noTextInput.blur();
+      }, 2000);
+
+      setTimeout(() => {
+        goFinal();
+      }, 2900);
+    });
+
+    noTextInput.addEventListener('input', () => {
+      if (currentMode !== 8) {
+        return;
+      }
+      if (mode8Triggered) {
+        return;
+      }
+      const v = (noTextInput.value || '').trim().toLowerCase();
+      if (v === 'no' || v.endsWith('no')) {
+        mode8Triggered = true;
+        askMsg.textContent = '자동완성이 적용되었습니다';
+        askMsg.classList.remove('hidden');
+
+        setTimeout(() => {
+          noTextInput.value = 'YES';
+          noTextInput.blur();
+        }, 2000);
+
+        setTimeout(() => {
+          goFinal();
+        }, 2900);
+      }
+    });
+
+    consentCancelBtn.addEventListener('click', () => {
+      closeConsentModal();
+    });
+
+    consentAgreeBtn.addEventListener('click', () => {
+      specialClause.classList.add('highlight');
+      specialClause.scrollIntoView({ block: 'center' });
+
+      setTimeout(() => {
+        closeConsentModal();
+        goFinal();
+      }, 1000);
+    });
+
+    function startSequence() {
+      if (showAskTimeout) {
+        clearTimeout(showAskTimeout);
+      }
+      if (pickModeTimeout) {
+        clearTimeout(pickModeTimeout);
+      }
+
+      stopHearts();
+      resetAskUI();
+      closeConsentModal();
+      closeAskModal();
+
+      showScreen('title');
+
+      // Title first, then ask modal.
+      showAskTimeout = setTimeout(() => {
+        openAskModal();
+      }, 900);
+    }
+
+    // Allow tapping the title to skip waiting.
+    titleScreen.addEventListener('click', () => {
+      if (!askModal.classList.contains('hidden')) {
+        return;
+      }
+      if (showAskTimeout) {
+        clearTimeout(showAskTimeout);
+      }
+      openAskModal();
+    });
+
+    modePicker.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-idx]');
+      if (!btn) {
+        return;
+      }
+      const idx = Number(btn.dataset.idx);
+      modeIndex = Number.isFinite(idx) && idx >= 0 ? idx : 0;
+      startSequence();
+    });
+
+    restartBtn.addEventListener('click', () => {
+      // Sequential: next mode in the configured order.
+      modeIndex = (modeIndex + 1) % modeOrder.length;
+      startSequence();
+    });
+
+    startSequence();
+  </script>
+</body>
+</html>
