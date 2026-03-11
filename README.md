@@ -2,6 +2,11 @@
 
 Single-page mobile Valentine webview built as a static HTML site.
 
+## Links
+
+- GitHub: https://github.com/minwoo19930301/valentine-mobile-webview
+- Live site: https://valentine-mobile-webview-minwoo-20260311.netlify.app
+
 ## Files
 
 - `index.html`: main interactive page
@@ -18,4 +23,4 @@ Then visit `http://localhost:8000/`.
 
 ## Deploy
 
-This project is ready for static hosting such as Netlify.
+Netlify production deploy is live.
